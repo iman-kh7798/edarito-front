@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./utilities.css";
+
+/* base */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
+}
+
+/* nicer defaults */
+* {
+  box-sizing: border-box;
+}

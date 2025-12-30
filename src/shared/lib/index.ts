@@ -1,1 +1,1 @@
-export { api, setupAxios } from "./apiClient";
+export { api, setupAxios } from "../api/apiClient";

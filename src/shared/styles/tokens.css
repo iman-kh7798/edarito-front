@@ -1,0 +1,7 @@
+/* TODO: add theme color here */
+@theme {
+  --color-*: initial; /* completely disable all of default colors */
+  --color-white: #fff;
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

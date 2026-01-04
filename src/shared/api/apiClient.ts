@@ -1,11 +1,14 @@
 import axios from "axios";
 import { baseUrl, timeout } from "../configs";
-import { clearToken, getToken } from "../lib/storage";
+import { clearToken, getToken, setToken } from "../lib/storage";
+import { refreshApi } from "@/features/auth/refresh/api/refresh";
 
 export const api = axios.create({
   baseURL: baseUrl,
   timeout: timeout,
 });
+
+// TODO: refresh token
 
 export function setupAxios() {
   api.defaults.headers.Accept = "application/json";
@@ -18,9 +21,15 @@ export function setupAxios() {
 
   api.interceptors.response.use(
     (r) => r,
-    (err) => {
+    async (err) => {
       if (err?.response?.status === 401) {
-        clearToken();
+        try {
+          const data = await refreshApi();
+          setToken(data.data.access_token);
+        } catch (err) {
+          console.log(err);
+          clearToken();
+        }
       }
       return Promise.reject(err);
     }

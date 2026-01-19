@@ -1,6 +1,7 @@
 import { api } from "@/shared/api/apiClient";
-import type { User } from "../model/types";
 import { INFO_URL } from "@/shared/api/routes";
+
+import type { User } from "../model/types";
 
 export const userKeys = {
   me: ["user", "me"] as const,

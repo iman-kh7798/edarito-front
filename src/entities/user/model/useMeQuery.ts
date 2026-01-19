@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMeApi, userKeys } from "../api/me";
+
 import { getToken } from "@/shared/lib/storage";
+
+import { getMeApi, userKeys } from "../api/me";
 
 export function useMeQuery() {
   const token = getToken();

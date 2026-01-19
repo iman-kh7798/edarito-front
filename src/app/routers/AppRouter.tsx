@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router";
+
 import { ProtectedRoute } from "../providers/";
 
 export const AppRouter = () => {

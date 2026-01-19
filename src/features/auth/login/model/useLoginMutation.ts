@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { loginApi } from "../api/login";
-import { setToken } from "@/shared/lib/storage";
+
 import { userKeys } from "@/entities/user/api/me";
+import { setToken } from "@/shared/lib/storage";
+
+import { loginApi } from "../api/login";
 
 export function useLoginMutation() {
   const qc = useQueryClient();

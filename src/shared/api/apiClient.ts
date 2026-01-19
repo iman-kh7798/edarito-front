@@ -1,7 +1,9 @@
 import axios from "axios";
+
+import { refreshApi } from "@/features/auth/refresh/api/refresh";
+
 import { baseUrl, timeout } from "../configs";
 import { clearToken, getToken, setToken } from "../lib/storage";
-import { refreshApi } from "@/features/auth/refresh/api/refresh";
 
 export const api = axios.create({
   baseURL: baseUrl,

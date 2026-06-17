@@ -1,13 +1,33 @@
 import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import importPlugin from "eslint-plugin-import";
 import boundaries from "eslint-plugin-boundaries";
+import importPlugin from "eslint-plugin-import";
+import jsxA11y from "eslint-plugin-jsx-a11y";
 import prettier from "eslint-plugin-prettier";
+import testingLibrary from "eslint-plugin-testing-library";
+import vitest from "eslint-plugin-vitest";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default [
   js.configs.recommended,
 
   ...tseslint.configs.recommended,
+
+  {
+    files: ["**/*.{js,jsx,ts,tsx}"],
+
+    plugins: {
+      "jsx-a11y": jsxA11y,
+    },
+
+    languageOptions: {
+      globals: globals.browser,
+    },
+
+    rules: {
+      ...jsxA11y.configs.recommended.rules,
+    },
+  },
 
   {
     files: ["**/*.{ts,tsx}"],
@@ -53,44 +73,67 @@ export default [
     rules: {
       "prettier/prettier": "error",
 
-      "boundaries/element-types": [
+      "boundaries/dependencies": [
         "error",
         {
           default: "disallow",
           rules: [
             {
-              from: "app",
-              allow: [
-                "app",
-                "processes",
-                "pages",
-                "widgets",
-                "features",
-                "entities",
-                "shared",
-              ],
+              from: { type: "app" },
+              allow: {
+                to: {
+                  type: [
+                    "app",
+                    "processes",
+                    "pages",
+                    "widgets",
+                    "features",
+                    "entities",
+                    "shared",
+                  ],
+                },
+              },
             },
             {
-              from: "pages",
-              allow: ["pages", "widgets", "features", "entities", "shared"],
+              from: { type: "pages" },
+              allow: {
+                to: {
+                  type: ["pages", "widgets", "features", "entities", "shared"],
+                },
+              },
             },
             {
-              from: "widgets",
-              allow: ["widgets", "features", "entities", "shared"],
+              from: { type: "widgets" },
+              allow: {
+                to: { type: ["widgets", "features", "entities", "shared"] },
+              },
             },
-            { from: "entities", allow: ["entities", "shared"] },
-            { from: "shared", allow: ["features", "shared"] },
-            { from: "features", allow: ["features", "entities", "shared"] },
             {
-              from: "processes",
-              allow: [
-                "processes",
-                "pages",
-                "widgets",
-                "features",
-                "entities",
-                "shared",
-              ],
+              from: { type: "features" },
+              allow: { to: { type: ["features", "entities", "shared"] } },
+            },
+            {
+              from: { type: "entities" },
+              allow: { to: { type: ["entities", "shared"] } },
+            },
+            {
+              from: { type: "shared" },
+              allow: { to: { type: ["shared"] } },
+            },
+            {
+              from: { type: "processes" },
+              allow: {
+                to: {
+                  type: [
+                    "processes",
+                    "pages",
+                    "widgets",
+                    "features",
+                    "entities",
+                    "shared",
+                  ],
+                },
+              },
             },
           ],
         },
@@ -111,7 +154,8 @@ export default [
             "**/router/**",
             "**/app/**",
             "react-dom/client",
-            "react-date-object/**",
+            "vitest/config",
+            "@testing-library/jest-dom/vitest",
           ],
         },
       ],
@@ -141,6 +185,38 @@ export default [
   },
 
   {
-    ignores: ["node_modules", "dist", "build"],
+    files: ["src/**/*.test.{ts,tsx}"],
+    plugins: {
+      ...vitest.configs.recommended.plugins,
+      ...testingLibrary.configs["flat/react"].plugins,
+    },
+    languageOptions: {
+      globals: globals.vitest,
+    },
+    rules: {
+      ...vitest.configs.recommended.rules,
+      ...testingLibrary.configs["flat/react"].rules,
+    },
+  },
+
+  {
+    files: ["e2e/**/*.ts"],
+    languageOptions: {
+      globals: globals.browser,
+    },
+    rules: {
+      "import/no-internal-modules": "off",
+    },
+  },
+
+  {
+    ignores: [
+      "node_modules",
+      "dist",
+      "build",
+      "coverage",
+      "playwright-report",
+      "test-results",
+    ],
   },
 ];

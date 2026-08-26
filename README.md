@@ -1,4 +1,4 @@
-# Frontend Boilerplate
+# Frontend Boilerplate.
 
 A modern React boilerplate with TypeScript and JavaScript source options, Feature-Sliced Design structure, authentication scaffolding, React Query, Axios, Tailwind CSS, GitLab CI, Husky, Commitlint, and Docker support.
 

@@ -1,114 +1,208 @@
 # Frontend Boilerplate
 
-Default key for token is `access_token` and you can change it in `shared/lib/storage.ts`
+A modern React boilerplate with TypeScript and JavaScript source options, Feature-Sliced Design structure, authentication scaffolding, React Query, Axios, Tailwind CSS, GitLab CI, Husky, Commitlint, and Docker support.
 
-TODO: parts are the main changing parts
+## Stack
 
-Use Capital-case for types and interfaces
+- React 19
+- Vite
+- TypeScript-first source in `src/`
+- JavaScript source option in `src-js/`
+- React Router
+- TanStack Query
+- Axios
+- Zod
+- Tailwind CSS
+- ESLint, Prettier, Husky, lint-staged, Commitlint
+- Vitest, Testing Library, Playwright
+- GitLab CI
+- Docker and Docker Compose
 
-## Features
+## Getting Started
 
-This boilerplate contains:
+### Requirements
 
-1. Auth strategy
-2. Datepicker helpers
-3. Routing strategy
-4. ApiCall strategy
-5. Store strategy for apis(react-query) and models(zustand)
-6. Validation schemas for forms using zod
+- Node.js 24 LTS
+- npm
+- Docker, optional for containerized development
 
-## Code Quality & Linting
-
-This project uses ESLint and Prettier to maintain code quality and consistency.
-
-### Linting Tools
-
-- **ESLint**: Code linting with TypeScript support
-- **Prettier**: Code formatting
-- **Husky**: Git hooks for pre-commit checks
-- **lint-staged**: Run linters on staged files only
-
-### Available Scripts
+### Install
 
 ```bash
-# Run ESLint to check for errors
-npm run lint
-
-# Run ESLint and automatically fix issues
-npm run lint:fix
-
-# Format code with Prettier
-npm run format
+npm install
 ```
 
-### Pre-commit Hooks
+### Run
 
-The project uses Husky to run lint-staged before each commit. This ensures:
+```bash
+npm run dev
+```
 
-- All staged `.ts`, `.tsx`, `.js`, `.jsx` files are linted and formatted
-- All staged `.json`, `.css`, `.scss`, `.md` files are formatted
-- Only staged files are checked (faster commits)
+### Validate
 
-### ESLint Configuration
+```bash
+npm run validate
+```
 
-The ESLint configuration enforces:
+`validate` runs lint, formatting check, and production build.
 
-- **Import ordering**: Imports are automatically sorted and grouped (external → internal → parent → sibling → index)
-- **Feature-Sliced Design boundaries**: Enforces proper layer dependencies
-- **TypeScript best practices**: Type-safe imports, no unused variables
-- **Prettier integration**: Code formatting rules
+## Source Options
 
-#### Import Order Rules
+The TypeScript source is the default and recommended source:
 
-1. External packages (react, react-router, etc.)
-2. Internal imports (@/shared, @/entities, etc.)
-3. Parent directory imports
-4. Sibling imports
-5. Index imports
+```text
+src/
+```
 
-Each group is separated by a blank line and sorted alphabetically.
+The JavaScript source lives here:
 
-#### Layer Dependencies (Feature-Sliced Design)
+```text
+src-js/
+```
 
-The project follows Feature-Sliced Design architecture with strict layer rules:
+To run the JavaScript source, update:
 
-- `app` → can import from: processes, pages, widgets, features, entities, shared
-- `pages` → can import from: widgets, features, entities, shared
-- `widgets` → can import from: features, entities, shared
-- `features` → can import from: entities, shared
-- `entities` → can import from: shared
-- `shared` → can import from: shared only (and features for API interceptors)
+```html
+<!-- index.html -->
+<script type="module" src="/src-js/main.jsx"></script>
+```
 
-### Fixing Linting Issues
+```ts
+// vite.config.ts
+resolve: { alias: { "@": path.resolve(__dirname, "src-js") } },
+```
 
-1. **Automatically fix most issues**:
+Detailed source docs:
 
-   ```bash
-   npm run lint:fix
-   ```
+- [TypeScript source](./src/README.md)
+- [JavaScript source](./src-js/README.md)
 
-2. **Format all files**:
+## Project Structure
 
-   ```bash
-   npm run format
-   ```
+```text
+src/ or src-js/
+├── app/        # App composition: providers, router, layouts
+├── pages/      # Route-level screens
+├── widgets/    # Reusable page sections and layout widgets
+├── features/   # User actions and workflows
+├── entities/   # Business entities and entity-level API/hooks
+└── shared/     # Generic API, configs, styles, storage, utilities
+```
 
-3. **Check specific files**:
-   ```bash
-   npx eslint src/path/to/file.tsx
-   ```
+Read the full architecture guide:
 
-### Common Issues & Solutions
+- [Architecture](./docs/architecture.md)
 
-- **Import order errors**: Run `npm run lint:fix` to auto-fix
-- **Boundary violations**: Check that you're importing from allowed layers
-- **Unused variables**: Remove them or prefix with `_` (e.g., `_unusedVar`)
-- **Type import errors**: Use `import type` for type-only imports
+## Scripts
 
-### Configuration Files
+```bash
+npm run dev           # Start Vite dev server
+npm run build         # Type-check and build production assets
+npm run preview       # Preview production build
+npm run lint          # Run ESLint
+npm run lint:fix      # Auto-fix ESLint issues
+npm run format        # Format files with Prettier
+npm run format:check  # Check Prettier formatting
+npm run test          # Unit and integration tests
+npm run test:unit     # Unit tests only
+npm run test:integration # Integration tests only
+npm run test:e2e      # Playwright E2E tests
+npm run test:coverage # Coverage report
+npm run audit         # npm audit at moderate severity
+npm run validate      # Lint, format check, test, and build
+npm run validate:all  # Validate plus E2E and audit
+```
 
-- `eslint.config.js`: ESLint rules and configuration
-- `.prettierrc`: Prettier formatting rules
-- `tsconfig.eslint.json`: TypeScript config for ESLint
-- `.husky/pre-commit`: Pre-commit hook script
-- `package.json`: lint-staged configuration
+## Testing
+
+This template includes:
+
+- Unit tests with Vitest
+- Integration tests with Vitest and Testing Library
+- E2E tests with Playwright
+
+Read the full testing guide:
+
+- [Testing](./docs/testing.md)
+
+## Git Workflow
+
+This template uses Conventional Commits and GitLab merge requests.
+
+Local hooks:
+
+- `pre-commit`: runs lint-staged
+- `commit-msg`: validates commit messages with Commitlint
+- `pre-push`: runs `npm run validate`
+
+Read the full workflow:
+
+- [Git flow](./docs/gitflow.md)
+
+## GitLab CI
+
+The GitLab pipeline runs:
+
+- lint
+- Prettier check
+- unit tests
+- integration tests
+- Playwright E2E tests
+- npm audit
+- production build
+- commit message validation
+- Docker production image build validation
+
+Pipeline config:
+
+- [.gitlab-ci.yml](./.gitlab-ci.yml)
+
+## Docker
+
+Run the development container:
+
+```bash
+docker compose up --build
+```
+
+Build the production image:
+
+```bash
+docker build --target production -t frontend-boilerplate .
+```
+
+Read the Docker guide:
+
+- [Docker](./docs/docker.md)
+
+## Security
+
+Dependency audit and baseline security practices are documented here:
+
+- [Security and audit](./docs/security.md)
+
+## API And Auth
+
+The configured Axios client lives in `shared/api/apiClient`.
+
+It handles:
+
+- base URL and timeout
+- bearer token injection
+- one refresh request shared across concurrent 401 responses
+- retrying the original request after refresh succeeds
+- clearing the token when refresh fails
+
+Update endpoint constants in `shared/api/routes`.
+
+## Code Quality
+
+- Use public slice exports for cross-layer imports.
+- Keep `shared` independent from business layers.
+- Put server state in React Query.
+- Put client-only shared state in Zustand only when React state is not enough.
+- Add JSDoc in JavaScript when function shapes are not obvious.
+
+## License
+
+MIT

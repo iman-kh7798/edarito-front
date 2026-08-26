@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import { refreshApi } from "@/features/auth/refresh/api/refresh";
-
 import { baseUrl, timeout } from "../configs";
 import { clearToken, getToken, setToken } from "../lib/storage";
 
@@ -11,10 +9,25 @@ import { clearToken, getToken, setToken } from "../lib/storage";
  */
 export const api = axios.create({
   baseURL: baseUrl,
-  timeout: timeout,
+  timeout,
 });
 
-// TODO: refresh token
+const REFRESH_URL = "/auth/refresh";
+
+const refreshClient = axios.create({
+  baseURL: baseUrl,
+  timeout,
+});
+
+let refreshRequest = null;
+
+function requestFreshToken() {
+  refreshRequest ??= refreshClient.get(REFRESH_URL).finally(() => {
+    refreshRequest = null;
+  });
+
+  return refreshRequest;
+}
 
 /**
  * Sets up Axios interceptors for request and response handling.
@@ -32,16 +45,28 @@ export function setupAxios() {
   api.interceptors.response.use(
     (r) => r,
     async (err) => {
-      if (err?.response?.status === 401) {
-        try {
-          const data = await refreshApi();
-          setToken(data.data.access_token);
-        } catch (err) {
-          console.log(err);
-          clearToken();
-        }
+      const originalRequest = err.config;
+
+      if (
+        err?.response?.status !== 401 ||
+        !originalRequest ||
+        originalRequest._retry ||
+        originalRequest.url === REFRESH_URL
+      ) {
+        return Promise.reject(err);
       }
-      return Promise.reject(err);
+
+      originalRequest._retry = true;
+
+      try {
+        const { data } = await requestFreshToken();
+        setToken(data.access_token);
+        originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        clearToken();
+        return Promise.reject(refreshError);
+      }
     }
   );
 }

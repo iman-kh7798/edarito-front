@@ -29,9 +29,9 @@ The skill may also activate automatically when a request clearly asks for legacy
 
 ## Using the skill in an older project
 
-Clone this boilerplate repository, then copy the complete canonical skill—not the thin repository adapter—into the older project.
+Clone this boilerplate repository, then copy the complete canonical skill folder—not the thin repository adapter—into the older project.
 
-For Codex/OpenAI-compatible repository agents:
+For Codex/OpenAI-compatible (such as Antigravity, Hermes, etc) repository agents:
 
 ```bash
 mkdir -p /path/to/older-project/.agents/skills

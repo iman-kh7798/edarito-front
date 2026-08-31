@@ -1,0 +1,12 @@
+# Keep text files consistent across Windows, macOS, and Linux.
+* text=auto eol=lf
+
+# Husky hooks must always use LF so they remain valid shell scripts on Unix.
+.husky/** text eol=lf
+*.sh text eol=lf
+
+# These files are executable text and should not receive automatic line-ending changes.
+.husky/* text eol=lf
+
+# Distribution archives are binary artifacts.
+*.zip binary

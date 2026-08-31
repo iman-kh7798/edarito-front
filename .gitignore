@@ -15,6 +15,10 @@ playwright-report
 test-results
 *.local
 
+# Generated agent-skill release artifacts
+agent-skills/*.zip
+agent-skills/*.zip.sha256
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -93,6 +93,14 @@ Read the full architecture guide:
 
 - [Architecture](./docs/architecture.md)
 
+## Kavano Frontend Agent Skill
+
+This boilerplate includes the `kavano-frontend-agent-skill` for Codex/OpenAI-compatible agents and Claude Code. Developers cloning this repository can use it directly; no ZIP installation is required.
+
+- [Developer installation and usage guide](./docs/agent-skill.md)
+- [GitLab wiki-ready page](./docs/wiki/kavano-frontend-agent-skill.md)
+- [Canonical skill source](./agent-skills/kavano-frontend-agent-skill/SKILL.md)
+
 ## Scripts
 
 ```bash

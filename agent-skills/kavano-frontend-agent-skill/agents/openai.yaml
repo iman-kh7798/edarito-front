@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kavano Frontend Agent Skill"
+  short_description: "Refactor legacy apps to the Kavano FSD standard"
+  default_prompt: "Use $kavano-frontend-agent-skill to migrate this legacy frontend to the Kavano frontend boilerplate architecture."

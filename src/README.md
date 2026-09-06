@@ -17,8 +17,13 @@ src/
 ├── widgets/    # Reusable page sections and layout widgets
 ├── features/   # User actions and workflows
 ├── entities/   # Business entities and entity-level API/hooks
-└── shared/     # Generic code: API client, configs, styles, utilities
+└── shared/     # Generic code: UI kit (shared/ui), API client, configs, styles, utilities
 ```
+
+The reusable UI kit lives in `shared/ui/<component>/` with a per-component
+public API (`import { Button } from "@/shared/ui/button"`). Design tokens and the
+gradient auth theme live in `shared/styles/tokens.css`. See
+[../CLAUDE.md](../CLAUDE.md) for the component catalog and the auth flow.
 
 ## Import Rules
 

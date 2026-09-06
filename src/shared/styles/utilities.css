@@ -1,10 +1,22 @@
-/* helper utilities */
+/* project utilities layered on top of Tailwind */
+
 .container-x {
   @apply mx-auto w-full max-w-6xl px-4;
 }
 
 .card {
-  @apply rounded-[var(--radius)] border;
-  border-color: rgb(var(--border));
-  background: rgb(var(--card));
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+}
+
+/* full-bleed brand gradient used by the auth screen */
+.auth-gradient {
+  background-color: var(--color-auth-via);
+  background-image: linear-gradient(
+    40deg,
+    var(--color-auth-from) 0%,
+    var(--color-auth-via) 55%,
+    var(--color-auth-to) 100%
+  );
 }

@@ -3,6 +3,9 @@ export const faToEnDigits = (input: string) =>
     .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d).toString())
     .replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d).toString());
 
+export const enToFaDigits = (input: string) =>
+  input.replace(/[0-9]/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
+
 export const normalizeSpaces = (s: string) => s.replace(/\s+/g, " ").trim();
 
 export const onlyDigits = (s: string) => /^\d+$/.test(s);

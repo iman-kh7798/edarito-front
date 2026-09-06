@@ -1,7 +1,93 @@
-/* TODO: add theme color here */
+/* ==========================================================================
+   Design tokens (Tailwind v4 `@theme`)
+
+   The default Tailwind palette is intentionally disabled. Every colour, radius
+   and font used in the app must come from a token below so re-theming and
+   light/dark stay in a single place. Tokens are exposed both as CSS custom
+   properties and as Tailwind utilities (e.g. `--color-brand-500` -> `bg-brand-500`,
+   `text-brand-500`, `border-brand-500`).
+   ========================================================================== */
 @theme {
-  --color-*: initial; /* completely disable all of default colors */
-  --color-white: #fff;
+  /* disable every built-in colour so only the tokens below exist */
+  --color-*: initial;
+
+  /* ----- primitives ------------------------------------------------------ */
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+  --color-black: #0b0f14;
+
+  /* ----- neutral ramp -------------------------------------------------- */
+  --color-neutral-50: #f6f7f9;
+  --color-neutral-100: #eceef2;
+  --color-neutral-200: #dce0e6;
+  --color-neutral-300: #c2c8d0;
+  --color-neutral-400: #97a0ad;
+  --color-neutral-500: #6b7480;
+  --color-neutral-600: #4d5560;
+  --color-neutral-700: #363d47;
+  --color-neutral-800: #232830;
+  --color-neutral-900: #151a20;
+
+  /* ----- brand ------------------------------------------------------------ */
+  --color-brand-50: #e9f4fb;
+  --color-brand-100: #cbe6f5;
+  --color-brand-300: #7cc0e6;
+  --color-brand-500: #2f8fd0; /* primary action / support button */
+  --color-brand-600: #1f74b5;
+  --color-brand-700: #185d92;
+
+  /* ----- semantic ------------------------------------------------------- */
+  --color-primary: #2f8fd0;
+  --color-primary-strong: #1f74b5;
+  --color-danger: #ff4326; /* form errors: "پر کردن فیلد الزامی است" */
+  --color-success: #21a05a;
+  --color-warning: #f0a020;
+  --color-info: #2f8fd0;
+
+  /* ----- surfaces (light) -------------------------------------------------- */
+  --color-bg: #f4f6f9;
+  --color-fg: #1f2530;
+  --color-muted: #6b7480;
+  --color-border: #dce0e6;
+  --color-card: #ffffff;
+
+  /* ----- auth screen --------------------------------------------------- */
+  --color-auth-from: #9a7bd2; /* bottom-left  */
+  --color-auth-via: #57a7c9; /* middle       */
+  --color-auth-to: #45dfa4; /* top-right    */
+  --color-auth-panel: #ffffff; /* left side panel */
+
+  /* text / hairlines drawn on top of the gradient */
+  --color-on-gradient: #ffffff;
+  --color-on-gradient-muted: rgba(255, 255, 255, 0.72);
+  --color-on-gradient-faint: rgba(255, 255, 255, 0.5);
+  --color-on-gradient-line: rgba(255, 255, 255, 0.38);
+  --color-on-gradient-line-strong: rgba(255, 255, 255, 0.85);
+
+  /* ----- radius ------------------------------------------------------------ */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* ----- typography --------------------------------------------------- */
+  --font-sans:
+    "Vazirmatn", "IRANSansX", "IRANSans", "Segoe UI", Tahoma, Arial, sans-serif;
+
+  /* ----- elevation --------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.08);
+  --shadow-md: 0 8px 24px rgba(16, 24, 40, 0.12);
+  --shadow-fab: 0 10px 24px rgba(16, 24, 40, 0.28);
 }
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+/* dark theme opt-in via <html data-theme="dark"> */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:where([data-theme="dark"]) {
+  --color-bg: #12161c;
+  --color-fg: #e7eaef;
+  --color-muted: #97a0ad;
+  --color-border: #2b323c;
+  --color-card: #1a1f26;
+}

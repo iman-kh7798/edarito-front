@@ -9,11 +9,19 @@ body {
 }
 
 body {
-  background: rgb(var(--bg));
-  color: rgb(var(--fg));
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* nicer defaults */
 * {
   box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.28);
 }

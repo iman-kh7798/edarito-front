@@ -1,13 +1,12 @@
 # Frontend Boilerplate
 
-A modern React boilerplate with TypeScript and JavaScript source options, Feature-Sliced Design structure, authentication scaffolding, React Query, Axios, Tailwind CSS, GitLab CI, Husky, Commitlint, and Docker support.
+A modern React + TypeScript application with a Feature-Sliced Design structure, authentication scaffolding, a token-driven design system, React Query, Axios, Tailwind CSS, GitLab CI, Husky, Commitlint, and Docker support.
 
 ## Stack
 
 - React 19
 - Vite
-- TypeScript-first source in `src/`
-- JavaScript source option in `src-js/`
+- TypeScript source in `src/`
 - React Router
 - TanStack Query
 - Axios
@@ -46,41 +45,16 @@ npm run validate
 
 `validate` runs ESLint, the FSD architecture check, formatting, unit/integration tests, and the production build.
 
-## Source Options
+## Source
 
-The TypeScript source is the default and recommended source:
-
-```text
-src/
-```
-
-The JavaScript source lives here:
-
-```text
-src-js/
-```
-
-To run the JavaScript source, update:
-
-```html
-<!-- index.html -->
-<script type="module" src="/src-js/main.jsx"></script>
-```
-
-```ts
-// vite.config.ts
-resolve: { alias: { "@": path.resolve(__dirname, "src-js") } },
-```
-
-Detailed source docs:
-
-- [TypeScript source](./src/README.md)
-- [JavaScript source](./src-js/README.md)
+All application code lives in `src/` (strict TypeScript). See [src/README.md](./src/README.md)
+for the folder contract, and [CLAUDE.md](./CLAUDE.md) for the design-system and
+auth-flow reference.
 
 ## Project Structure
 
 ```text
-src/ or src-js/
+src/
 ├── app/        # App composition: providers, router, layouts
 ├── pages/      # Route-level screens
 ├── widgets/    # Reusable page sections and layout widgets

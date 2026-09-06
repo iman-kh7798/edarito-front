@@ -10,4 +10,4 @@ For Semgrep or SonarQube configuration and finding triage, use `.agents/skills/s
 
 Treat `agent-skills/kavano-frontend-agent-skill/` as the canonical skill source. The `.agents/skills/` and `.claude/skills/` files are repository-local adapters and must remain thin pointers to the canonical package.
 
-Use `src/` as the canonical TypeScript application unless a task explicitly targets `src-js/`. Preserve unrelated working-tree changes and run the relevant checks, with `npm run validate` as the full local validation command.
+`src/` is the only application source (strict TypeScript). Preserve unrelated working-tree changes and run the relevant checks, with `npm run validate` as the full local validation command.

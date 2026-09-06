@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { REFRESH_URL } from "@/shared/api/routes";
+import { REFRESH_URL } from "@/shared/api";
 import { baseUrl, timeout } from "@/shared/configs";
 
 export type RefreshResponse = { access_token: string };

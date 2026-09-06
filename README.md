@@ -1,4 +1,4 @@
-# Frontend Boilerplate.
+# Frontend Boilerplate
 
 A modern React boilerplate with TypeScript and JavaScript source options, Feature-Sliced Design structure, authentication scaffolding, React Query, Axios, Tailwind CSS, GitLab CI, Husky, Commitlint, and Docker support.
 
@@ -13,9 +13,9 @@ A modern React boilerplate with TypeScript and JavaScript source options, Featur
 - Axios
 - Zod
 - Tailwind CSS
-- ESLint, Prettier, Husky, lint-staged, Commitlint
+- ESLint, Steiger, Prettier, Husky, lint-staged, Commitlint
 - Vitest, Testing Library, Playwright
-- GitLab CI
+- GitLab CI with Semgrep, Trivy, npm audit, and optional SonarQube analysis
 - Docker and Docker Compose
 
 ## Getting Started
@@ -44,7 +44,7 @@ npm run dev
 npm run validate
 ```
 
-`validate` runs lint, formatting check, and production build.
+`validate` runs ESLint, the FSD architecture check, formatting, unit/integration tests, and the production build.
 
 ## Source Options
 
@@ -97,6 +97,8 @@ Read the full architecture guide:
 
 This boilerplate includes the `kavano-frontend-agent-skill` for Codex/OpenAI-compatible agents and Claude Code. Developers cloning this repository can use it directly; no ZIP installation is required.
 
+It also includes a reviewed, pinned `feature-slicing` companion plus focused `semgrep-security` and `sonarqube-analysis` skills. Kavano policy remains authoritative for repository-specific conventions.
+
 - [Developer installation and usage guide](./docs/agent-skill.md)
 - [GitLab wiki-ready page](./docs/wiki/kavano-frontend-agent-skill.md)
 - [Canonical skill source](./agent-skills/kavano-frontend-agent-skill/SKILL.md)
@@ -108,6 +110,7 @@ npm run dev           # Start Vite dev server
 npm run build         # Type-check and build production assets
 npm run preview       # Preview production build
 npm run lint          # Run ESLint
+npm run lint:fsd      # Validate Feature-Sliced Design boundaries
 npm run lint:fix      # Auto-fix ESLint issues
 npm run format        # Format files with Prettier
 npm run format:check  # Check Prettier formatting
@@ -117,6 +120,8 @@ npm run test:integration # Integration tests only
 npm run test:e2e      # Playwright E2E tests
 npm run test:coverage # Coverage report
 npm run audit         # npm audit at moderate severity
+npm run quality:lint  # ESLint, Steiger, and Prettier check
+npm run quality:test  # Unit/integration tests and production build
 npm run validate      # Lint, format check, test, and build
 npm run validate:all  # Validate plus E2E and audit
 ```
@@ -149,17 +154,11 @@ Read the full workflow:
 
 ## GitLab CI
 
-The GitLab pipeline runs:
+The GitLab pipeline uses three ordered stages:
 
-- lint
-- Prettier check
-- unit tests
-- integration tests
-- Playwright E2E tests
-- npm audit
-- production build
-- commit message validation
-- Docker production image build validation
+1. Security: npm audit, Semgrep, Trivy, and SonarQube when its CI variables are configured.
+2. Linting: ESLint, Steiger, and Prettier.
+3. Testing: unit, integration, production build, and Playwright E2E.
 
 Pipeline config:
 
@@ -185,7 +184,7 @@ Read the Docker guide:
 
 ## Security
 
-Dependency audit and baseline security practices are documented here:
+Dependency, SAST, secret/configuration, and SonarQube quality-gate practices are documented here:
 
 - [Security and audit](./docs/security.md)
 

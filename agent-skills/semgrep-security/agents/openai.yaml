@@ -1,0 +1,4 @@
+interface:
+  display_name: "Semgrep Security"
+  short_description: "Configure and triage Semgrep SAST"
+  default_prompt: "Use $semgrep-security to configure or review Semgrep for this repository."

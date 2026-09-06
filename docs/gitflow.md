@@ -68,6 +68,8 @@ npm run validate
 
 ## Merge Request Rules
 
+Start from `.gitlab/merge_request_templates/Default.md`. It asks for scope, verification, security impact, review notes, and UI evidence without duplicating the pipeline.
+
 Before opening a merge request:
 
 1. Rebase or merge the target branch into your branch.

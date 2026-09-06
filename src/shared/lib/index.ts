@@ -1,1 +1,1 @@
-export { api, setupAxios } from "../api/apiClient";
+export { clearToken, getToken, setToken } from "./storage";

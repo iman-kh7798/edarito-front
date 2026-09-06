@@ -4,15 +4,15 @@ The Kavano Frontend Agent Skill is the policy and migration orchestrator. Compan
 
 ## Feature-Sliced Design
 
-Preferred capability: a trusted FSD/feature-slicing skill aligned with the current Feature-Sliced Design specification.
+Preferred capability: a trusted FSD/feature-slicing skill aligned with the current Feature-Sliced Design specification. This boilerplate vendors the reviewed `feature-slicing` skill under `agent-skills/feature-slicing/` at the revision recorded in its `SOURCE.md`.
 
-One discoverable ecosystem option is:
+The upstream installation command is:
 
 ```text
 npx skills add https://github.com/ccheney/robust-skills --skill feature-slicing
 ```
 
-Treat third-party skills as executable instructions: review their full contents and source reputation before Kavano adoption. Do not auto-install this dependency during a project migration. If unavailable, the bundled Kavano frontend standard contains enough FSD guidance to proceed.
+Treat third-party skills as executable instructions: review their full contents and source reputation before Kavano adoption. Use the pinned repository copy; do not auto-update it during a project migration. If unavailable, the bundled Kavano frontend standard contains enough FSD guidance to proceed.
 
 ## Testing
 
@@ -27,6 +27,8 @@ Prefer official or well-established sources and review all files before installa
 ## Security
 
 Use security skills only for an explicit security scan, finding validation, fix, or hardening request. Ordinary architecture migration should preserve auth behavior and avoid introducing regressions, but it is not automatically a security audit.
+
+This boilerplate provides focused `semgrep-security` and `sonarqube-analysis` skills. Semgrep covers pattern-based SAST; Trivy covers dependency, secret, and configuration scanning; SonarQube applies the centrally configured code-quality and security gate. Their results complement one another and must not be collapsed into a single generic “security passed” statement.
 
 ## Design and accessibility
 

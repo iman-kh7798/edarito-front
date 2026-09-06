@@ -40,6 +40,8 @@ import { useMeQuery } from "@/entities/user";
 
 Avoid importing from another slice's private internals unless that file is intentionally part of the public contract.
 
+Run `npm run lint:fsd` to check FSD structure and public APIs with Steiger. Repository-specific exceptions are documented in `steiger.config.ts`; do not add broad ignores to hide ownership violations.
+
 ## API Rules
 
 - `shared/api/apiClient` owns Axios setup, auth header injection, and generic retry behavior.

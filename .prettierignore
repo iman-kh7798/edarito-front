@@ -5,3 +5,6 @@ coverage
 playwright-report
 test-results
 package-lock.json
+
+# Preserve reviewed vendored skill content byte-for-byte.
+agent-skills/feature-slicing/

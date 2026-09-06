@@ -1,5 +1,4 @@
-import { api } from "@/shared/api/apiClient";
-import { LOGIN_URL } from "@/shared/api/routes";
+import { api, LOGIN_URL } from "@/shared/api";
 
 export type LoginDTO = { email: string; password: string };
 export type LoginResponse = { access_token: string };

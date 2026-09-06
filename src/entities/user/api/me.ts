@@ -1,5 +1,4 @@
-import { api } from "@/shared/api/apiClient";
-import { INFO_URL } from "@/shared/api/routes";
+import { api, INFO_URL } from "@/shared/api";
 
 import type { User } from "../model/types";
 

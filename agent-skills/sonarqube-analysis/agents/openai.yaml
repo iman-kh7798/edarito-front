@@ -1,0 +1,4 @@
+interface:
+  display_name: "SonarQube Analysis"
+  short_description: "Configure and triage SonarQube quality gates"
+  default_prompt: "Use $sonarqube-analysis to configure or diagnose SonarQube analysis for this repository."

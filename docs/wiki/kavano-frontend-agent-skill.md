@@ -6,6 +6,8 @@ title: Kavano Frontend Agent Skill
 
 The Kavano frontend boilerplate contains a reusable agent skill for assessing and incrementally migrating legacy React projects to the Kavano Vite, TypeScript, and Feature-Sliced Design standard.
 
+Version 2.1 adds an explicit three-stage quality workflow: security, linting, then testing. The repository also includes a pinned `feature-slicing` companion and focused `semgrep-security` and `sonarqube-analysis` skills.
+
 ## Use in the boilerplate
 
 Clone or pull the boilerplate and restart the coding-agent session. No ZIP download is required.
@@ -17,6 +19,8 @@ $kavano-frontend-agent-skill assess this project and create a migration plan onl
 ```
 
 Codex/OpenAI-compatible agents use `.agents/skills/kavano-frontend-agent-skill/`. Claude Code uses `.claude/skills/kavano-frontend-agent-skill/`. Both point to the canonical source under `agent-skills/kavano-frontend-agent-skill/`.
+
+The companion skills use the same adapter pattern. Kavano policy remains authoritative when the third-party FSD companion differs from a repository convention.
 
 ## Use in an older project
 

@@ -15,6 +15,7 @@ Then read only the references needed for the request:
 
 - Assessment or planning: [references/migration-playbook.md](references/migration-playbook.md)
 - Implementation: [references/migration-playbook.md](references/migration-playbook.md) and [references/verification.md](references/verification.md)
+- CI, security, linting, or test-gate work: [references/quality-gates.md](references/quality-gates.md)
 - Installation, publishing, OpenAI, or Anthropic usage: [references/platform-distribution.md](references/platform-distribution.md)
 - Skill composition or dependency selection: [references/companion-skills.md](references/companion-skills.md)
 
@@ -47,6 +48,10 @@ Use other installed skills only when their normal trigger applies. Testing skill
 7. Enforce boundaries mechanically where the project supports it. Fix violations based on ownership, not by hiding them with broad exceptions.
 8. Run focused checks after each batch and the full validation suite at the end. Review the diff for accidental behavior changes and stale files.
 9. Deliver a concise migration report: completed scope, preserved behavior, checks run, baseline-vs-final status, known risks, and next safe batch.
+
+## Three-stage quality workflow
+
+For implementation work, apply the relevant gates in this order: security, linting, then testing. A stage must report its actual result before the next stage is treated as authoritative. Remote or credentialed scanners are required only when the repository and environment configure them; do not invent tokens, weaken a gate, or claim a skipped scanner passed.
 
 ## Stop and ask
 

@@ -2,7 +2,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
-import { userKeys } from "@/entities/user/api/me";
+import { userKeys } from "@/entities/user";
 import { clearToken } from "@/shared/lib/storage";
 
 export function useLogout() {

@@ -61,7 +61,6 @@ export default [
 
       "boundaries/elements": [
         { type: "app", pattern: "src/app/*" },
-        { type: "processes", pattern: "src/processes/*" },
         { type: "pages", pattern: "src/pages/*" },
         { type: "widgets", pattern: "src/widgets/*" },
         { type: "features", pattern: "src/features/*" },
@@ -84,7 +83,6 @@ export default [
                 to: {
                   type: [
                     "app",
-                    "processes",
                     "pages",
                     "widgets",
                     "features",
@@ -97,43 +95,24 @@ export default [
             {
               from: { type: "pages" },
               allow: {
-                to: {
-                  type: ["pages", "widgets", "features", "entities", "shared"],
-                },
-              },
-            },
-            {
-              from: { type: "widgets" },
-              allow: {
                 to: { type: ["widgets", "features", "entities", "shared"] },
               },
             },
             {
-              from: { type: "features" },
+              from: { type: "widgets" },
               allow: { to: { type: ["features", "entities", "shared"] } },
             },
             {
-              from: { type: "entities" },
+              from: { type: "features" },
               allow: { to: { type: ["entities", "shared"] } },
+            },
+            {
+              from: { type: "entities" },
+              allow: { to: { type: ["shared"] } },
             },
             {
               from: { type: "shared" },
               allow: { to: { type: ["shared"] } },
-            },
-            {
-              from: { type: "processes" },
-              allow: {
-                to: {
-                  type: [
-                    "processes",
-                    "pages",
-                    "widgets",
-                    "features",
-                    "entities",
-                    "shared",
-                  ],
-                },
-              },
             },
           ],
         },

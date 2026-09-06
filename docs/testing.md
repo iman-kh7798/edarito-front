@@ -78,12 +78,8 @@ PLAYWRIGHT_CHROMIUM_CHANNEL=chrome npm run test:e2e
 
 GitLab runs:
 
-- lint and format check
-- unit tests
-- integration tests
-- E2E tests
-- npm audit
-- production build
-- Docker image build validation
+- security checks first;
+- ESLint, Steiger, and format checks second;
+- unit tests, integration tests, the production build, and E2E tests in the final stage.
 
 Keep unit and integration tests fast. Put slower full-browser checks in E2E.

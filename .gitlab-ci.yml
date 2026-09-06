@@ -1,0 +1,126 @@
+# THIS IS ONLY A SAMPLE CONFIG THATS RECOMMENDED FOR GITLAB CI 
+
+
+# stages:
+#   - security
+#   - linting
+#   - testing
+
+# workflow:
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+#     - if: $CI_COMMIT_BRANCH
+
+# default:
+#   interruptible: true
+
+# variables:
+#   NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+
+# .node-job:
+#   image: node:24-alpine
+#   cache:
+#     key:
+#       files:
+#         - package-lock.json
+#     paths:
+#       - .npm/
+#   before_script:
+#     - npm ci --prefer-offline
+
+# npm-audit:
+#   extends: .node-job
+#   stage: security
+#   script:
+#     - npm audit --audit-level=moderate
+
+# semgrep:
+#   image: semgrep/semgrep
+#   stage: security
+#   script:
+#     - semgrep scan --config auto --error --exclude node_modules --exclude dist .
+
+# trivy:
+#   image:
+#     name: aquasec/trivy:0.74.0
+#     entrypoint: [""]
+#   stage: security
+#   variables:
+#     TRIVY_CACHE_DIR: "$CI_PROJECT_DIR/.trivycache"
+#   cache:
+#     key: trivy-db
+#     paths:
+#       - .trivycache/
+#   script:
+#     - trivy fs --exit-code 1 --severity HIGH,CRITICAL --scanners vuln,secret,misconfig --skip-dirs node_modules --skip-dirs dist .
+
+# sonarqube:
+#   image:
+#     name: sonarsource/sonar-scanner-cli:latest
+#     entrypoint: [""]
+#   stage: security
+#   variables:
+#     SONAR_USER_HOME: "$CI_PROJECT_DIR/.sonar"
+#     GIT_DEPTH: "0"
+#   cache:
+#     key: sonar-cache
+#     paths:
+#       - .sonar/cache/
+#   script:
+#     - sonar-scanner -Dsonar.projectKey="$SONAR_PROJECT_KEY" -Dsonar.qualitygate.wait=true
+#   rules:
+#     - if: "$SONAR_TOKEN && $SONAR_HOST_URL && $SONAR_PROJECT_KEY"
+
+# eslint:
+#   extends: .node-job
+#   stage: linting
+#   script:
+#     - npm run lint
+
+# fsd:
+#   extends: .node-job
+#   stage: linting
+#   script:
+#     - npm run lint:fsd
+
+# prettier:
+#   extends: .node-job
+#   stage: linting
+#   script:
+#     - npm run format:check
+
+# unit:
+#   extends: .node-job
+#   stage: testing
+#   script:
+#     - npm run test:unit
+
+# integration:
+#   extends: .node-job
+#   stage: testing
+#   script:
+#     - npm run test:integration
+
+# build:
+#   extends: .node-job
+#   stage: testing
+#   script:
+#     - npm run build
+#   artifacts:
+#     paths:
+#       - dist/
+#     expire_in: 1 week
+
+# e2e:
+#   image: mcr.microsoft.com/playwright:v1.61.0-noble
+#   stage: testing
+#   before_script:
+#     - npm ci --prefer-offline
+#   script:
+#     - npm run test:e2e
+#   artifacts:
+#     when: always
+#     paths:
+#       - playwright-report/
+#       - test-results/
+#     expire_in: 1 week

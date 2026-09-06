@@ -11,7 +11,7 @@ export const AuthFooter = ({ className }: { className?: string }) => (
     <PartnerLogos className="opacity-30" />
     <div className="flex items-center gap-2 text-[11px] text-on-gradient-muted">
       <KavanoLogo className="w-4" />
-      <span dir="ltr">Copyrighted by kavano.co 2024</span>
+      <span dir="ltr">Copyrighted by kavano.co 2026</span>
     </div>
   </footer>
 );

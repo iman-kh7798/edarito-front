@@ -47,7 +47,18 @@ Guidance for working in this repository. Read `AGENTS.md`, `docs/architecture.md
    `docs/legacy-panel-reference.md`) instead of re-crawling the live legacy
    site when the snapshot already answers the question, and keep replies
    concise. Flag it to the user if you spot a structural way to cut cost
-   (e.g. a doc that should be captured once and reused).
+   (e.g. a doc that should be captured once and reused). See
+   `../CLAUDE.md` for the full workspace-wide token-optimization checklist
+   (never bulk-read `node_modules`/`dist`/`coverage`, delegate wide
+   exploration to `Explore`, prefer `codebase-memory` graph queries for
+   structural questions, don't re-run full `npm run validate` after every
+   small edit, etc.) and the dev-server port-reuse rule below.
+7. **Reuse the running dev server — don't open a new port every session.**
+   Before running `npm run dev`, check whether port 5173 is already
+   listening (`ss -ltnp | grep 5173`). If it is, that's a dev server from
+   this or an earlier session — use it (point `chrome-devtools-mcp` at
+   `http://localhost:5173`) instead of starting a second Vite instance on 5174. Only start a fresh one if nothing is listening, or the existing
+   process is confirmed stale.
 
 ## What this project is
 

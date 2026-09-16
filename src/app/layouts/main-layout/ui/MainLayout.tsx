@@ -1,5 +1,14 @@
-import { type ReactNode } from "react";
+import { Outlet } from "react-router";
 
-export const MainLayout = ({ children }: { children: ReactNode }) => {
-  return <div>{children}</div>;
+import { Sidebar } from "@/widgets/sidebar";
+
+export const MainLayout = () => {
+  return (
+    <div className="min-h-dvh">
+      <Sidebar />
+      <main className="min-h-dvh md:ms-20">
+        <Outlet />
+      </main>
+    </div>
+  );
 };

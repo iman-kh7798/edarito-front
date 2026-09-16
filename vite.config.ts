@@ -8,4 +8,14 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: { alias: { "@": path.resolve(__dirname, "src") } },
+  server: {
+    proxy: {
+      // Same-origin in dev so the browser never needs CORS; mirrors how
+      // this is expected to be served in prod (reverse-proxied under /api).
+      "/api": {
+        target: "http://127.0.0.1:8000",
+        changeOrigin: true,
+      },
+    },
+  },
 });

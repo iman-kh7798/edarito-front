@@ -5,11 +5,20 @@ import axios, {
 } from "axios";
 
 import { baseUrl, timeout } from "../configs";
-import { clearToken, getToken, setToken } from "../lib/storage";
+import {
+  clearToken,
+  getRefreshToken,
+  getToken,
+  setRefreshToken,
+  setToken,
+} from "../lib/storage";
 
 import { REFRESH_URL } from "./routes";
 
-type RefreshResponse = { access_token: string };
+// SimpleJWT rotates the refresh token on every use (ROTATE_REFRESH_TOKENS,
+// see ../edarito-backend config/settings/base.py) and blacklists the old
+// one, so a successful refresh must persist both tokens it returns.
+type RefreshResponse = { access: string; refresh: string };
 type RetriableRequestConfig = InternalAxiosRequestConfig & { _retry?: boolean };
 
 export const api = axios.create({
@@ -26,7 +35,7 @@ let refreshRequest: Promise<AxiosResponse<RefreshResponse>> | null = null;
 
 function requestFreshToken() {
   refreshRequest ??= refreshClient
-    .get<RefreshResponse>(REFRESH_URL)
+    .post<RefreshResponse>(REFRESH_URL, { refresh: getRefreshToken() })
     .finally(() => {
       refreshRequest = null;
     });
@@ -54,7 +63,8 @@ export function setupAxios() {
         error.response?.status !== 401 ||
         !originalRequest ||
         originalRequest._retry ||
-        originalRequest.url === REFRESH_URL
+        originalRequest.url === REFRESH_URL ||
+        !getRefreshToken()
       ) {
         return Promise.reject(error);
       }
@@ -63,8 +73,9 @@ export function setupAxios() {
 
       try {
         const { data } = await requestFreshToken();
-        setToken(data.access_token);
-        originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
+        setToken(data.access);
+        setRefreshToken(data.refresh);
+        originalRequest.headers.Authorization = `Bearer ${data.access}`;
         return api(originalRequest);
       } catch (refreshError) {
         clearToken();

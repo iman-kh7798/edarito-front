@@ -15,6 +15,9 @@ import {
 
 export type RecoveryStep = "username" | "code" | "password" | "done";
 
+// The legacy panel's forgetPass endpoint returns `remind` (seconds) here;
+// 180 is a reasonable default while the backend endpoint doesn't exist yet
+// (see docs/backend-needs.md) and requestCode's onError can't read a real one.
 const RESEND_SECONDS = 180;
 
 /**
@@ -27,7 +30,6 @@ export function usePasswordRecoveryFlow() {
   const [username, updateUsername] = useState("");
   const [code, updateCode] = useState("");
   const [password, updatePassword] = useState("");
-  const [confirm, updateConfirm] = useState("");
   const [resetToken, setResetToken] = useState("");
   const [resendSeconds, setResendSeconds] = useState(RESEND_SECONDS);
   const [resendNonce, setResendNonce] = useState(0);
@@ -54,7 +56,7 @@ export function usePasswordRecoveryFlow() {
     }
     clearError();
     requestCode.mutate(
-      { username: username.trim() },
+      { username: parsed.data.username },
       {
         onSuccess: (response) => {
           restartTimer(response.data?.retryAfterSeconds ?? RESEND_SECONDS);
@@ -73,15 +75,15 @@ export function usePasswordRecoveryFlow() {
     requestCode.mutate({ username: username.trim() });
   };
 
-  const submitCode = () => {
-    const parsed = recoveryCodeSchema.safeParse({ code });
+  const submitCode = (value = code) => {
+    const parsed = recoveryCodeSchema.safeParse({ code: value });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message);
       return;
     }
     clearError();
     verifyCode.mutate(
-      { username: username.trim(), code },
+      { username: username.trim(), code: parsed.data.code },
       {
         onSuccess: (response) => {
           setResetToken(response.data?.resetToken ?? "");
@@ -93,14 +95,14 @@ export function usePasswordRecoveryFlow() {
   };
 
   const submitPassword = () => {
-    const parsed = recoveryPasswordSchema.safeParse({ password, confirm });
+    const parsed = recoveryPasswordSchema.safeParse({ password });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message);
       return;
     }
     clearError();
     resetPassword.mutate(
-      { resetToken, password },
+      { resetToken, password: parsed.data.password },
       {
         onSuccess: () => setStep("done"),
         onError: () => setError("تغییر رمز عبور انجام نشد"),
@@ -118,7 +120,6 @@ export function usePasswordRecoveryFlow() {
     username,
     code,
     password,
-    confirm,
     error,
     resendSeconds,
     resendNonce,
@@ -138,12 +139,12 @@ export function usePasswordRecoveryFlow() {
       clearError();
       updatePassword(value);
     },
-    setConfirm: (value: string) => {
-      clearError();
-      updateConfirm(value);
-    },
     submitUsername,
-    submitCode,
+    // OTP boxes auto-submit as soon as the 6th digit is entered (matches
+    // the legacy panel); the manual "ثبت" button just re-submits the
+    // current value, e.g. after a paste that didn't trigger onComplete.
+    submitCode: () => submitCode(),
+    onCodeComplete: (value: string) => submitCode(value),
     submitPassword,
     resend,
     back,

@@ -25,6 +25,9 @@ export const AuthLayout = ({ children }: Props) => (
       </div>
 
       <AuthFooter className="absolute inset-x-0 bottom-6" />
+      {/* Physically left regardless of RTL, matching the legacy panel's fixed
+          chat-widget corner. */}
+      <SupportButton className="absolute bottom-6 left-6" />
     </main>
   </div>
 );

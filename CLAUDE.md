@@ -1,9 +1,97 @@
 # CLAUDE.md
 
 Guidance for working in this repository. Read `AGENTS.md`, `docs/architecture.md`,
-and `src/README.md` alongside this file.
+`docs/backend-api-reference.md`, `docs/legacy-panel-reference.md`,
+`docs/backend-needs.md`, and `src/README.md` alongside this file.
+
+## Ground rules for working here
+
+1. **Build a design system first, implement against it.** Every screen is
+   composed from the shared token set (`src/shared/styles/tokens.css`) and
+   the shared UI kit (`src/shared/ui/*`, catalogued below) — components must
+   be **reusable** rather than bespoke-per-screen wherever the same control
+   (field, button, OTP box, countdown, …) recurs. Add a new shared component
+   before duplicating markup for a one-off need.
+2. **After building or changing any screen/feature, connect to the running
+   app with `chrome-devtools-mcp` and actually exercise it** (navigate, fill
+   forms, click through the flow, check the console/network) before calling
+   the work done. The UI must visually and behaviorally track the legacy
+   panel's design (`docs/legacy-panel-reference.md`) — cross-check live
+   against `https://stage.edarito.com/` with `chrome-devtools-mcp`, not just
+   the snapshot doc. The legacy panel itself had real responsive bugs, so
+   **check every changed screen at several viewport widths** (e.g. ~320,
+   375, 768, 1024, 1920) — don't assume desktop-only is enough. If anything
+   is off — visually (spacing, RTL, colors, responsiveness) or functionally
+   (broken flow, wrong API call, console error) — go back and fix it, then
+   re-verify with `chrome-devtools-mcp` again. Do not report a feature as
+   finished on the basis of type-checks/tests alone.
+3. **Do not add tests unless the user explicitly asks.** (Existing tests
+   still need to keep passing — don't break them.)
+4. **Never take a default/guessed action when something is ambiguous or
+   underspecified** (which screen it belongs to, exact copy, an edge case the
+   legacy panel and the backend disagree on, a design detail not covered by
+   `docs/legacy-panel-reference.md`, etc.). Stop and ask the user instead of
+   picking an option on your own. This applies even under otherwise
+   autonomous/auto-mode instructions. When the gap is specifically something
+   the backend needs to add/change, write it up in
+   `docs/backend-needs.md` (proposed contract + open questions) instead of
+   inventing the contract silently — see that file for the current example
+   (self-service password recovery).
+5. **Code must be optimized and follow best practice**: no redundant
+   re-renders/requests, narrow types over `any`, colocate state with the
+   component/hook that owns it, prefer the existing patterns in this repo
+   (see "Architecture" and "Design system" below) over introducing new ones.
+6. **Bias toward less agent token spend where it doesn't cost correctness**:
+   prefer targeted `Read`/`Grep` over re-reading whole trees, batch
+   independent tool calls, reuse a doc snapshot (e.g.
+   `docs/legacy-panel-reference.md`) instead of re-crawling the live legacy
+   site when the snapshot already answers the question, and keep replies
+   concise. Flag it to the user if you spot a structural way to cut cost
+   (e.g. a doc that should be captured once and reused).
 
 ## What this project is
+
+**اداریتو (Edarito)**, built by **Kavano**, is a Persian/RTL internal office
+automation system (سامانه اتوماسیون اداری) — the digital equivalent of an
+organization's internal mail room: formal letters/memos with an official
+numbering scheme, sender/recipient routing, referral chains, and personal
+archiving, aimed at company staff (پرسنل) organized into a hierarchical org
+chart (سازمان).
+
+This repo has two projects:
+
+- `edarito-frontend-v2` (this one) — the **new** frontend being built from
+  scratch, matching the **existing production/staging design system** (see
+  `docs/legacy-panel-reference.md`, captured by exploring
+  `https://stage.edarito.com/`) but implemented against the **new backend**
+  in `../edarito-backend` (see `docs/backend-api-reference.md` for what that
+  backend currently exposes — it does not yet cover every legacy feature).
+- `../edarito-backend` — a Django REST backend being built in parallel,
+  currently covering auth/personnel/organizations/letters only (see
+  `docs/backend-api-reference.md`).
+
+The legacy/staging panel is the **design and UX source of truth** for this
+rewrite: same core flows (letter inbox, compose, thread/referral view,
+personal folders, personnel directory), reimplemented on the new stack
+described below. Where the legacy panel has a feature the new backend
+doesn't support yet, don't invent it silently — ask (see "Ground rules"
+above).
+
+### Stage panel access (reference only)
+
+For comparing behavior/design against the legacy panel during development:
+
+- URL: `https://stage.edarito.com/`
+- Username: `0021298726`
+- Password: `dz6gkf`
+- After password, the account has multiple job positions — pick
+  "کارمند30 کاوانو | شرکت کاوانو" to land on the real dashboard.
+
+This is a stage account for reference only — do not commit new/rotated
+credentials here without the user's say-so, and don't reuse this account for
+anything beyond visually/behaviorally cross-checking the rewrite.
+
+## Frontend stack
 
 Kavano / Edarito frontend: a React 19 + TypeScript SPA built with Vite, Tailwind
 CSS v4, React Router, TanStack Query, Axios and Zod, organised with
@@ -116,23 +204,32 @@ and switches between two feature forms via local `mode` state:
 
 - **`features/auth/login`** — `LoginForm` + `useLoginFlow`. Steps:
   `username` → `password`. Numeric username (≤ 10 digits). Calls
-  `useLoginMutation` (`shared/lib/storage` holds the token, `entities/user`
-  `me` query is invalidated on success).
+  `useLoginMutation`, wired to the real `POST /api/auth/login/`: stores both
+  `access`/`refresh` (`shared/lib/storage`), seeds the `entities/user` `me`
+  query cache from the response's `user`, and navigates to `/`.
 - **`features/auth/password-recovery`** — `PasswordRecoveryForm` +
-  `usePasswordRecoveryFlow`. Steps: `username` → `code` (OTP + resend
-  `Countdown`) → `password` (new + confirm) → `done`. Three mutations wrap the
-  sample endpoints; the flow degrades gracefully so the UI works without a
-  backend.
+  `usePasswordRecoveryFlow`. Steps: `username` → `code` (OTP, auto-submits on
+  the 6th digit, resend `Countdown`) → `password` (single field, no confirm —
+  matches the legacy panel exactly) → `done`. The three mutations point at
+  `PASSWORD_RESET_*_URL`, which **the backend does not implement yet** — see
+  `docs/backend-needs.md`. The flow degrades gracefully (advances past a
+  failed request) so it can still be built/tested end-to-end without that
+  backend work landing first.
 
 No sign-up flow exists by design — login and password recovery only.
 
-### Endpoints to replace
+### API wiring
 
-`src/shared/api/routes.ts` holds sample paths. Point these at the real API:
-`LOGIN_URL`, `INFO_URL`, `REFRESH_URL`, `PASSWORD_RESET_REQUEST_URL`,
-`PASSWORD_RESET_VERIFY_URL`, `PASSWORD_RESET_CONFIRM_URL`. Align the DTOs in
-`features/auth/*/api` with the backend contract (e.g. `LoginDTO` currently
-`{ username, password }`).
+`src/shared/api/routes.ts` holds the real backend paths (`/api/auth/...`,
+proxied in dev by `vite.config.ts`'s `server.proxy` to
+`http://127.0.0.1:8000`). `LOGIN_URL`, `INFO_URL`, `REFRESH_URL`,
+`LOGOUT_URL` are wired and verified end-to-end against a local backend
+instance. `PASSWORD_RESET_*_URL` are **proposed** paths pending backend work
+(`docs/backend-needs.md`). `entities/user` maps the backend's snake_case
+`CurrentUserSerializer` (`api/userDto.ts`) to the camelCase `User` domain
+type — extend that mapper, not ad-hoc field access, when new user fields are
+needed. `accounts.User` uses Django's default integer PK (`id: number`), not
+the UUID `BaseModel` used elsewhere in the backend.
 
 ## Gotchas
 

@@ -20,7 +20,7 @@ type Props = {
 const HEADINGS: Record<string, string> = {
   username: "بازیابی رمز عبور",
   code: "کد تایید برای شما ارسال شده است، لطفا آنرا وارد کنید",
-  password: "انتخاب رمز عبور جدید",
+  password: "رمز جدید خود را تعیین کنید",
 };
 
 export const PasswordRecoveryForm = ({ onBack, onDone }: Props) => {
@@ -102,6 +102,7 @@ export const PasswordRecoveryForm = ({ onBack, onDone }: Props) => {
           <OtpInput
             value={flow.code}
             onChange={flow.setCode}
+            onComplete={flow.onCodeComplete}
             error={Boolean(flow.error)}
             focusOnMount
           />
@@ -112,23 +113,20 @@ export const PasswordRecoveryForm = ({ onBack, onDone }: Props) => {
       )}
 
       {flow.step === "password" && (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-3">
           <PasswordField
             label="رمز عبور جدید"
             name="new-password"
             value={flow.password}
             onChange={flow.setPassword}
+            error={flow.error}
             autoComplete="new-password"
             focusOnMount
           />
-          <PasswordField
-            label="تکرار رمز عبور جدید"
-            name="confirm-password"
-            value={flow.confirm}
-            onChange={flow.setConfirm}
-            error={flow.error}
-            autoComplete="new-password"
-          />
+          <p className="text-xs text-on-gradient-muted">
+            رمز عبور باید بدون فاصله و شامل ۶ کاراکتر و ترکیبی از حروف و اعداد
+            باشد.
+          </p>
         </div>
       )}
 
